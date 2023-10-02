@@ -17,6 +17,7 @@ func _process(_delta):
 		canFire = false # Set ability to fire to false, so can't fire
 		await get_tree().create_timer(fireRate).timeout # This waits to execute the next line. Adjust variable to be able to fire faster.
 		canFire = true # Set fire back to true so can fire again
+		print("****VelDelt=" , get_position_delta())
 
 func _physics_process(delta):
 	if not is_on_floor():
@@ -31,6 +32,8 @@ func _physics_process(delta):
 	if Input.is_key_pressed(KEY_SPACE) and is_on_floor():
 		velocity.y = -jumpForce
 	move_and_slide()
+
+	
 	
 	if global_position.y > 150:
 		game_over()
