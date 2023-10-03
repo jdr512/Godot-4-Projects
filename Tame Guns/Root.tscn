@@ -635,7 +635,6 @@ offset_bottom = 23.0
 
 [node name="Bullet" parent="." instance=ExtResource("7_ase0c")]
 visible = false
-position = Vector2(-321, 93)
 
 [node name="Crosshair" parent="." instance=ExtResource("5_glxh8")]
 position = Vector2(-342, 50)

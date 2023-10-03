@@ -9,7 +9,7 @@ func _ready():
 func _process(_delta):
 	mousePosition = get_global_mouse_position() # Store global mouse pos inside of mousePosition variable
 	position = mousePosition                    # set position of node to mousePosition Vector2 variable
-	
+#	print("MousePosit:", position)
 	
 	
 
