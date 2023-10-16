@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://vwblp241ce2i"
+path="res://.godot/imported/Bullet Impact 16 - Light Version.wav-bab36d08345d43c62f0885e8e3ccfc0c.sample"
+
+[deps]
+
+source_file="res://Sound/Weapons/Bullet Impact 16 - Light Version.wav"
+dest_files=["res://.godot/imported/Bullet Impact 16 - Light Version.wav-bab36d08345d43c62f0885e8e3ccfc0c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

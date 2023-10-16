@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1lbh0yt6g24a"]
+
+[ext_resource type="Script" path="res://Enemy.gd" id="1_a55yr"]
+[ext_resource type="Texture2D" uid="uid://dpfw6ck4mow1p" path="res://Sprites/Characters/character_0024.png" id="2_yd837"]
+[ext_resource type="PackedScene" uid="uid://oayav7lmojwh" path="res://explosion.tscn" id="3_qn0ck"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_besna"]
+radius = 14.0
+
+[node name="Enemy" type="Area2D"]
+collision_layer = 5
+collision_mask = 5
+script = ExtResource("1_a55yr")
+moveDir = Vector2(0, -30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_besna")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_yd837")
+
+[node name="Explosion" parent="." instance=ExtResource("3_qn0ck")]
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

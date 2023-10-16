@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5m10cwb0ajqs"]
+
+[ext_resource type="Script" path="res://playerBulletMG.gd" id="1_sa2c4"]
+[ext_resource type="Texture2D" uid="uid://ydbe1tyhvygu" path="res://Sprites/Objects/tile_0151.png" id="2_lqiql"]
+[ext_resource type="AudioStream" uid="uid://dyr5yogkjr535" path="res://Sound/Weapons/Impacts_PROCESSED_002.wav" id="3_f5vll"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nvbyd"]
+
+[node name="PlayerBulletMG" type="Area2D" groups=["playerBullet"]]
+collision_layer = 2147483652
+collision_mask = 2147483652
+script = ExtResource("1_sa2c4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(0.689115, 0.689115)
+shape = SubResource("CircleShape2D_nvbyd")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_lqiql")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_f5vll")
+volume_db = -10.084
+pitch_scale = 1.42
+autoplay = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

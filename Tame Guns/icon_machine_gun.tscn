@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://j60el4djajk7"]
+
+[ext_resource type="Texture2D" uid="uid://ca0o2wcsithtd" path="res://Sprites/metal_slug_heavy_machine_gun_icon.png" id="1_by7o0"]
+[ext_resource type="Script" path="res://icon_machine_gun.gd" id="1_hhlhu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7j6v2"]
+
+[node name="Icon-MachineGun" type="Area2D"]
+collision_layer = 2147483648
+collision_mask = 2147483648
+script = ExtResource("1_hhlhu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_by7o0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_7j6v2")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

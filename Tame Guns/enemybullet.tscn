@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcvewdc6dxuk4"]
+
+[ext_resource type="Script" path="res://enemyBullet.gd" id="1_m81pc"]
+[ext_resource type="Texture2D" uid="uid://ydbe1tyhvygu" path="res://Sprites/Objects/tile_0151.png" id="2_ualcx"]
+[ext_resource type="AudioStream" uid="uid://c5g3nd0d3rriy" path="res://Sound/Weapons/PM_AG_20_3_ABSTRACT_GUNS.wav" id="3_mgfgo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nvbyd"]
+
+[node name="EnemyBullet" type="Area2D" groups=["enemyBullet"]]
+collision_layer = 5
+collision_mask = 5
+script = ExtResource("1_m81pc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(0.689115, 0.689115)
+shape = SubResource("CircleShape2D_nvbyd")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_ualcx")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_mgfgo")
+volume_db = -10.084
+pitch_scale = 2.13
+autoplay = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
