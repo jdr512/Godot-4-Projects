@@ -40,7 +40,7 @@ func _process(_delta):
 			canFire = false # Set ability to fire to false, so can't fire
 			await get_tree().create_timer(fireRate).timeout # This waits to execute the next line. Adjust variable to be able to fire faster.
 			canFire = true # Set fire back to true so can fire again
-		if hasMachineGun:
+		elif hasMachineGun:
 			var c = bulletMG.instantiate() # This creates a copy of the scene definied in var bullet above and thus the script for the bullet
 			owner.add_child(c)
 			c.transform = $shotSpawn.global_transform # Force the bullet to spawn at shotSpawn marker

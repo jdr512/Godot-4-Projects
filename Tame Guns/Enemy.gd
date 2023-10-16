@@ -63,15 +63,18 @@ func _on_area_entered(area):
 		
 		var randomNum = randi_range(1,100)
 		var bm = boom.instantiate() # Creates an instance of an explosion at the enemy
+		
 		add_sibling(bm)
+		bm.set_deferred("igloo", false)
 		get_node("../").add_score(1)
 		bm.play("Boom")
 		bm.global_position = global_position
 		
 		if randomNum >= 50 and get_node("../Player").hasMachineGun == false and get_node("../EnemySpawner").heavyMGIconExists == false:
 			var icon = iconHeavyMG.instantiate()
-			add_sibling(icon)
-			icon.global_position = bm.global_position
+			var boomPos = bm.global_position
+			add_sibling.call_deferred(icon)
+			icon.global_position = boomPos
 			get_node("../EnemySpawner").heavyMGIconExists = true
 			
 		queue_free()
