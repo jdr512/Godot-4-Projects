@@ -23,7 +23,7 @@ func _process(_delta):
 	
 	firstBulletDelay += 1 # delays first shot
 	
-	if canFire and firstBulletDelay >= 150:
+	if canFire and firstBulletDelay >= 150 and get_node("../Player").alive == true:
 		
 		var eb = enemyBullet.instantiate() # This creates a copy of the scene definied in var bullet above and thus the script for the bullet
 		add_sibling(eb)

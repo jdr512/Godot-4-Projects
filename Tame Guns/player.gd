@@ -19,6 +19,11 @@ var aimingMid = false
 var aimingHigh = false
 var hasMachineGun = false
 var machineGunAmmo : int = 0
+var alive : bool = true
+var wentUp : bool = false
+var postDeathInvuln : bool = false
+var deathInvulnCounter : int = 0
+var deathTimeInvuln: int = 90
 
 @onready var state_machine = $AnimationTree["parameters/playback"]
 @onready var animation_tree : AnimationTree = $AnimationTree
@@ -32,7 +37,23 @@ func _ready():
 	animation_tree.active = true # This turns on the animations, I have them set to off in the editor UI
 
 func _process(_delta):
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and canFire and is_on_floor() and !isMoving:
+	
+	
+	
+	if postDeathInvuln:
+		
+		visible = randi_range(0,1) # This flickers the sprite back and forth to make a fade out illusion
+		$Body.disabled = 1
+		deathInvulnCounter += 1
+		print(deathInvulnCounter)
+		if deathInvulnCounter >= deathTimeInvuln:
+			visible = 1
+			postDeathInvuln = false
+			$Body.disabled = 0
+			deathInvulnCounter = 0
+	
+	
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and canFire and is_on_floor() and !isMoving and alive:
 		if !hasMachineGun:
 			var b = bullet.instantiate() # This creates a copy of the scene definied in var bullet above and thus the script for the bullet
 			owner.add_child(b)
@@ -55,25 +76,25 @@ func _physics_process(delta):
 	velocity.x = 0
 	isMoving = false
 	
-	if is_on_floor():
+	if is_on_floor() and alive:
 		isJumping = false
 	
-	if !is_on_floor():
+	if !is_on_floor() and alive:
 		isJumping = true
-	
+		
 	if !is_on_floor():
 		velocity.y += gravity * delta
 		
-	if Input.is_key_pressed(KEY_A):
+	if Input.is_key_pressed(KEY_A) and alive:
 		velocity.x -= moveSpeed
 
-	if Input.is_key_pressed(KEY_D):
+	if Input.is_key_pressed(KEY_D) and alive:
 		velocity.x += moveSpeed
 	
 	if velocity.x != 0:
 		isMoving = true
 	
-	if Input.is_key_pressed(KEY_SPACE) and is_on_floor() and canJump:
+	if Input.is_key_pressed(KEY_SPACE) and is_on_floor() and canJump and alive:
 		velocity.y = -jumpForce
 		canJump = false # Set ability to fire to false, so can't fire
 		await get_tree().create_timer(jumpRate).timeout # This waits to execute the next line. Adjust variable to be able to fire faster.
@@ -93,80 +114,104 @@ func sprite_animations():
 	var distancePlayerToTarget = abs(global_position - currentTargetPos) # This shows the distance of the target from the player
 	var animFlipChecker = currentTargetPos - global_position # This math tells me if it's to the left or right of the player
 	
-	if animFlipChecker.x < 0 and distancePlayerToTarget.x > 15: # Normal orientation
+	if animFlipChecker.x < 0 and distancePlayerToTarget.x > 15 and alive: # Normal orientation
 		$AnimatedSprite2D.flip_h = 0
-		if aimingMid:
+		if aimingMid and alive:
 			$shotSpawn.position = Vector2(-14.65,-16.805)
-		if aimingHigh:
+		if aimingHigh and alive:
 			$shotSpawn.position = Vector2(-14.65,-20.805)
 		
-	if animFlipChecker.x >= 0 and distancePlayerToTarget.x > 15: # Flip the sprite if we're aiming the other way
+	if animFlipChecker.x >= 0 and distancePlayerToTarget.x > 15 and alive: # Flip the sprite if we're aiming the other way
 		$AnimatedSprite2D.flip_h = 1
-		if aimingMid:
+		if aimingMid and alive:
 			$shotSpawn.position = Vector2(14.65,-16.805)
-		if aimingHigh:
+		if aimingHigh and alive:
 			$shotSpawn.position = Vector2(14.65,-20.805)
 			
 
-	if velocity.x < 0: # This flips the sprites if moving left
+	if velocity.x < 0 and alive: # This flips the sprites if moving left
 		$AnimatedSprite2D.flip_h = 1
-	if velocity.x > 0: # Set it back
+	if velocity.x > 0 and alive: # Set it back
 		$AnimatedSprite2D.flip_h = 0
 
 # Sounds attatched to the player
-	if isMoving and !isJumping and $FootSteps.get_playback_position() == 0:
+	if alive and isMoving and !isJumping and $FootSteps.get_playback_position() == 0:
 		$FootSteps.play()
-	if !isMoving:
+	if alive and !isMoving:
 		$FootSteps.stop()
-	if isJumping:
+	if alive and isJumping:
 		$FootSteps.stop()
 		
 
-	if !isMoving and !isJumping and distancePlayerToTarget.x > 15 and distancePlayerToTarget.x < 65 and distancePlayerToTarget.y <= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x > 15 and distancePlayerToTarget.x < 65 and distancePlayerToTarget.y <= 85: #aiming mid and low
 		aimingMid = true
 		aimingHigh = false
 		state_machine.travel("Aiming-Mid-Slight")
 
-	if !isMoving and !isJumping and distancePlayerToTarget.x >= 65 and distancePlayerToTarget.x < 125 and distancePlayerToTarget.y <= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x >= 65 and distancePlayerToTarget.x < 125 and distancePlayerToTarget.y <= 85: #aiming mid and low
 		aimingMid = true
 		aimingHigh = false
 		state_machine.travel("Aiming-Mid-Medium")
 
-	if !isMoving and !isJumping and distancePlayerToTarget.x >= 125 and distancePlayerToTarget.y <= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x >= 125 and distancePlayerToTarget.y <= 85: #aiming mid and low
 		aimingMid = true
 		aimingHigh = false
 		state_machine.travel("Aiming-Mid-Full")
 
-	if !isMoving and !isJumping and distancePlayerToTarget.x >= 15 and distancePlayerToTarget.x < 65 and distancePlayerToTarget.y >= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x >= 15 and distancePlayerToTarget.x < 65 and distancePlayerToTarget.y >= 85: #aiming mid and low
 		aimingMid = false
 		aimingHigh = true
 		state_machine.travel("Aiming-Up-Slight")
 
-	if !isMoving and !isJumping and distancePlayerToTarget.x >= 65 and distancePlayerToTarget.x < 125 and distancePlayerToTarget.y >= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x >= 65 and distancePlayerToTarget.x < 125 and distancePlayerToTarget.y >= 85: #aiming mid and low
 		aimingMid = false
 		aimingHigh = true
 		state_machine.travel("Aiming-Up-Medium")
 		
-	if !isMoving and !isJumping and distancePlayerToTarget.x >= 125 and distancePlayerToTarget.y >= 85: #aiming mid and low
+	if alive and !isMoving and !isJumping and distancePlayerToTarget.x >= 125 and distancePlayerToTarget.y >= 85: #aiming mid and low
 		aimingMid = false
 		aimingHigh = true
 		state_machine.travel("Aiming-Up-Full")
 
-	if !isMoving and !isJumping and abs(global_position.x - currentTargetPos.x) < 15:
+	if alive and !isMoving and !isJumping and abs(global_position.x - currentTargetPos.x) < 15:
 		state_machine.travel("Idle")
 		aimingHigh = false
 		aimingMid = false
 		$shotSpawn.position = Vector2(-0.87,-16.295)
 #
-	if isMoving and isJumping:
+	if alive and isMoving and isJumping:
 		state_machine.travel("Jump")
 #
-	if !isMoving and isJumping:
+	if alive and !isMoving and isJumping:
 		state_machine.travel("Jump_n")
 #
-	if isMoving and !isJumping:
+	if alive and isMoving and !isJumping:
 		state_machine.travel("Run")
 #		if $FootSteps.get_playback_position() == 0:
+
+
+# This is the death section, it's kind of a mess, but it does work atm! Should re-do and make cleaner
+	if !alive and !wentUp:
+		state_machine.travel("Dead-Going-Up")
+		$DeathSound.play()
+		velocity.y = -190
+		await get_tree().create_timer(.2).timeout
+		wentUp = true
+	
+	if !alive and wentUp and !is_on_floor():
+		state_machine.travel("Dead-Going-Down")
+		
+	if !alive and is_on_floor() and wentUp:
+		state_machine.travel("Dead-Grounded")
+		
+		await get_tree().create_timer(.3).timeout
+		visible = randi_range(0,1) # This flickers the sprite back and forth to make a fade out illusion
+		await get_tree().create_timer(.3).timeout
+		postDeathInvuln = true
+		alive = true
+		wentUp = false
+		
+		
 
 func aiming_close_mid(): # Leave this in for now, I have it hooked up to an aiming animation
 	pass

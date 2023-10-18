@@ -70,6 +70,6 @@ func _on_area_entered(area): # Destroy bullet on impact with enemy
 		queue_free()
 		
 func _on_body_entered(body):
-	if body.is_in_group("Player"):
-		body.game_over()
-		print("trigger")
+	if body.is_in_group("Player") and get_node("../Player").postDeathInvuln == false:
+		get_node("../Player").alive = false
+		#body.game_over()

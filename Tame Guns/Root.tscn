@@ -1,4 +1,4 @@
-[gd_scene load_steps=103 format=3 uid="uid://deixco0ui4uk7"]
+[gd_scene load_steps=115 format=3 uid="uid://deixco0ui4uk7"]
 
 [ext_resource type="Script" path="res://Root.gd" id="1_58q0u"]
 [ext_resource type="AudioStream" uid="uid://cp3nd2sauq7bq" path="res://Sound/Music/04 Carson City.mp3" id="2_7cxmc"]
@@ -14,8 +14,10 @@
 [ext_resource type="Texture2D" uid="uid://4y822mvnuc7j" path="res://Sprites/icon_ammo_og.png" id="6_kpp1t"]
 [ext_resource type="Texture2D" uid="uid://bty3rufsm6foo" path="res://Sprites/Sprite Sheets/clint-jump.png" id="7_egrei"]
 [ext_resource type="Texture2D" uid="uid://ckvlvwf7kagwi" path="res://Sprites/Sprite Sheets/clint-dodge.png" id="9_tpnc7"]
+[ext_resource type="Texture2D" uid="uid://6blvdl44su7u" path="res://Sprites/Sprite Sheets/clint-dead-Sheet.png" id="9_y1y66"]
 [ext_resource type="AudioStream" uid="uid://cbdd3b46onr4l" path="res://Sound/Player/FOOTSTEPS (A) Walking Loop 01.wav" id="12_nafuj"]
 [ext_resource type="AudioStream" uid="uid://cfro27mtmgne" path="res://Sound/Weapons/metal_slug_heavy_mg.mp3" id="14_h5ehi"]
+[ext_resource type="AudioStream" uid="uid://qdbr7bjiloiu" path="res://Sound/Player/player_death.mp3" id="16_6hkbo"]
 
 [sub_resource type="SystemFont" id="SystemFont_bklir"]
 
@@ -67,6 +69,15 @@ play_mode = 1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7jvh0"]
 animation = &"Look-Up-Slight"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_01p5x"]
+animation = &"Dead-Going-Down"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qru21"]
+animation = &"Dead-Going-Up"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_21gbu"]
+animation = &"Dead-Grounded"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6e28j"]
 animation = &"Idle"
@@ -140,18 +151,24 @@ states/Aiming-Up-Reverse/node = SubResource("AnimationNodeAnimation_mlkop")
 states/Aiming-Up-Reverse/position = Vector2(-912, -156.07)
 states/Aiming-Up-Slight/node = SubResource("AnimationNodeAnimation_7jvh0")
 states/Aiming-Up-Slight/position = Vector2(-900.763, -20.0704)
+states/Dead-Going-Down/node = SubResource("AnimationNodeAnimation_01p5x")
+states/Dead-Going-Down/position = Vector2(-389.286, -25.8083)
+states/Dead-Going-Up/node = SubResource("AnimationNodeAnimation_qru21")
+states/Dead-Going-Up/position = Vector2(-401.286, -109.808)
+states/Dead-Grounded/node = SubResource("AnimationNodeAnimation_21gbu")
+states/Dead-Grounded/position = Vector2(-401.286, 42.1917)
 states/End/position = Vector2(-1144, -231.846)
 states/Idle/node = SubResource("AnimationNodeAnimation_6e28j")
 states/Idle/position = Vector2(-678.763, -261)
 states/Jump/node = SubResource("AnimationNodeAnimation_683d3")
-states/Jump/position = Vector2(172.237, -451)
+states/Jump/position = Vector2(-81.763, -255)
 states/Jump_n/node = SubResource("AnimationNodeAnimation_mpts4")
-states/Jump_n/position = Vector2(485.237, -256)
+states/Jump_n/position = Vector2(220.237, -68)
 states/Run/node = SubResource("AnimationNodeBlendSpace2D_ky0hv")
-states/Run/position = Vector2(184.237, 187)
+states/Run/position = Vector2(-81.763, 189)
 states/Start/position = Vector2(-828, -261)
 transitions = ["Jump_n", "Run", SubResource("AnimationNodeStateMachineTransition_o5162"), "Jump_n", "Jump", SubResource("AnimationNodeStateMachineTransition_ixmnr"), "Jump", "Run", SubResource("AnimationNodeStateMachineTransition_sv70g"), "Run", "Jump", SubResource("AnimationNodeStateMachineTransition_seujs"), "Jump", "Jump_n", SubResource("AnimationNodeStateMachineTransition_1ukv8"), "Run", "Jump_n", SubResource("AnimationNodeStateMachineTransition_w0sf3")]
-graph_offset = Vector2(-1241.76, -368.07)
+graph_offset = Vector2(-1300.29, -324.808)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_257qc"]
 atlas = ExtResource("4_flrac")
@@ -216,6 +233,22 @@ region = Rect2(480, 0, 80, 80)
 [sub_resource type="AtlasTexture" id="AtlasTexture_hemhl"]
 atlas = ExtResource("5_4ocfq")
 region = Rect2(560, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k55v3"]
+atlas = ExtResource("9_y1y66")
+region = Rect2(0, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pkj6"]
+atlas = ExtResource("9_y1y66")
+region = Rect2(80, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mv5r7"]
+atlas = ExtResource("9_y1y66")
+region = Rect2(160, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5so8q"]
+atlas = ExtResource("9_y1y66")
+region = Rect2(240, 0, 80, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pw0ys"]
 atlas = ExtResource("4_ltroy")
@@ -383,6 +416,28 @@ animations = [{
 "speed": 30.0
 }, {
 "frames": [{
+"duration": 60.0,
+"texture": SubResource("AtlasTexture_k55v3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1pkj6")
+}],
+"loop": false,
+"name": &"Dead",
+"speed": 30.0
+}, {
+"frames": [{
+"duration": 5.0,
+"texture": SubResource("AtlasTexture_mv5r7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5so8q")
+}],
+"loop": false,
+"name": &"Dead.Hit.Ground",
+"speed": 30.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pw0ys")
 }, {
@@ -515,6 +570,89 @@ animations = [{
 "name": &"Run",
 "speed": 12.0
 }]
+
+[sub_resource type="Animation" id="Animation_3jrny"]
+resource_name = "Dead-Going-Down"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Dead"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_jm8qe"]
+resource_name = "Dead-Going-Up"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Dead"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_h3lau"]
+resource_name = "Dead-Grounded"
+length = 0.25
+step = 60.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Dead.Hit.Ground"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1823),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
 
 [sub_resource type="Animation" id="Animation_xrp0f"]
 resource_name = "Idle"
@@ -848,6 +986,9 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5lnol"]
 _data = {
+"Dead-Going-Down": SubResource("Animation_3jrny"),
+"Dead-Going-Up": SubResource("Animation_jm8qe"),
+"Dead-Grounded": SubResource("Animation_h3lau"),
 "Idle": SubResource("Animation_xrp0f"),
 "Jump": SubResource("Animation_8yrb3"),
 "Jump_n": SubResource("Animation_7vsa1"),
@@ -1065,6 +1206,10 @@ libraries = {
 stream = ExtResource("12_nafuj")
 volume_db = -18.95
 pitch_scale = 1.12
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("16_6hkbo")
+volume_db = -22.834
 
 [node name="Weapon_Pick_Up_Sounds" type="Node" parent="Player"]
 
