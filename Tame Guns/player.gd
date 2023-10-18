@@ -1,37 +1,33 @@
 
 extends CharacterBody2D
 
-var moveSpeed : float = 85
-var jumpForce : float = 200
-var gravity : float = 900
-
-var updateCrossHairPos : Vector2
-var characterVector : Vector2
-
-var bullet = preload ("res://playerbullet.tscn") # Preload the bullet scene
-var bulletMG = preload ("res://playerbulletMG.tscn") # Preload the MG bullet scene
-
-var canFire = true
-var canJump = true
-var isMoving = false
-var isJumping = false
+var canFire = true # true if allowed to shoot
+var canJump = true # true if allowed to input jump. Planning on using this for air dashing / jump
+var isMoving = false # true if player has an x vel and is alive
+var isJumping = false # True if player has y vel and is alive
 var aimingMid = false
 var aimingHigh = false
 var hasMachineGun = false
 var machineGunAmmo : int = 0
-var alive : bool = true
-var wentUp : bool = false
-var postDeathInvuln : bool = false
-var deathInvulnCounter : int = 0
-var deathTimeInvuln: int = 90
+var alive : bool = true # if player alive
+var wentUp : bool = false # On death, this is when the player is going upward
+var postDeathInvuln : bool = false # triggers post death invuln when we turn alive back to true
+var deathInvulnCounter : int = 0 # Timer for how long to flicker the sprite
+var deathTimeInvuln: int = 180 # amount of time player is invuln after death
+var bullet = preload ("res://playerbullet.tscn") # Preload the bullet scene
+var bulletMG = preload ("res://playerbulletMG.tscn") # Preload the MG bullet scene
 
 @onready var state_machine = $AnimationTree["parameters/playback"]
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var animation_player : AnimationPlayer = $AnimationPlayer
 
+
 @export var fireRate = .4   # Fire rate for pistol (default)
 @export var fireRateMG = .1 # Fire rate for the machine gun
 @export var jumpRate = .6   # Jump speed
+@export var moveSpeed : float = 85 # movement speed left / right
+@export var jumpForce : float = 200 # propulsion for upward movement of jump
+@export var gravity : float = 900 # simulated gravity to drag player back down
 
 func _ready():
 	animation_tree.active = true # This turns on the animations, I have them set to off in the editor UI
